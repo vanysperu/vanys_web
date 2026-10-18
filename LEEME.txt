@@ -1,0 +1,87 @@
+VANYS - Página web orientada a ventas
+=====================================
+
+ESTRUCTURA
+- index.html ........... Portada simple: bienvenida, la grulla que orienta y dos tarjetas para elegir entre Merchandising y Sistemas/Web. No tiene más secciones, para que el cliente elija sin distraerse.
+- merchandising.html ... Página de ventas de merchandising: productos con botón de cotización directa, catálogos Heyzine, ocasiones (incluye campaña Navidad 2026), kits corporativos, por qué VANYS, pasos, preguntas y cotizador.
+- sistemas-web.html .... Página de ventas de páginas web y sistemas: planes (Landing, Web corporativa, Sistema a medida), qué incluye, proceso, preguntas y cotizador.
+- publicidad.html y sistemas.html ... Redirigen a las páginas nuevas para conservar enlaces antiguos.
+- styles.css ........... Estilos compartidos por las tres páginas (antes estaban repetidos dentro de cada HTML).
+- promos.js ............ Flyers del carrusel de promociones (ruta, texto y mensaje de WhatsApp). Se editan solo aquí y aparecen en merchandising.html y sistemas-web.html.
+- script.js ............ Menú, enlaces de WhatsApp, carrusel de promociones, visor de catálogos, cotizador, preguntas frecuentes, animaciones y grulla guía.
+- assets/ .............. Imágenes que carga la web, por carpeta:
+    logo/ ............ logo-vanys.webp
+    mascotas/ ........ mascotas en WebP y el GIF de la grulla corriendo
+    productos/ ....... fotos de "Lo más pedido" en 4 tamaños (nombre-300/600/900/1200.webp)
+    promociones/ ..... flyers del carrusel: merch/ y web/
+    og/ .............. imágenes de vista previa al compartir el enlace en WhatsApp y redes (1200x630, menos de 300 KB)
+    originales/ ...... archivos fuente (PNG/JPEG grandes) que la web NO carga: logo, mascotas, fotos de productos y flyers.
+                       Guárdalos fuera del hosting o bórralos si ya los tienes en otro lugar; no es necesario subirlos.
+
+CÓMO FUNCIONA LA CONVERSIÓN
+- Todo enlace con la clase "wa-link" abre WhatsApp con el texto de su atributo data-message ya escrito. Cambia los textos ahí si quieres otro mensaje.
+- El número de WhatsApp está en una sola línea de script.js (WHATSAPP_NUMBER). Si cambia, edítalo ahí.
+- El cotizador (formulario) arma el mensaje con los campos que el cliente completó y abre WhatsApp. No necesita servidor ni correo.
+- En celular aparece una barra fija inferior con el botón de WhatsApp; en escritorio, el botón flotante.
+
+CARRUSEL DE OFERTAS Y PROMOCIONES
+- Los flyers viven en dos carpetas:
+    assets/promociones/merch -> promociones de merchandising (aparecen en merchandising.html)
+    assets/promociones/web   -> promociones de páginas web y sistemas (aparecen en sistemas-web.html)
+  La página detecta la carpeta automáticamente. La portada no muestra promociones.
+- Los dos flyers actuales ya están conectados usando copias .webp ligeras con nombres sin espacios ni tildes; los archivos originales están en assets/originales/promociones.
+- Para agregar un flyer nuevo: guárdalo en la carpeta que corresponda con un nombre sin espacios ni tildes (ej. promo-navidad-2026.jpg), comprimido a menos de 300 KB si es posible (tinypng.com o squoosh.app), y agrega su línea en promos.js.
+- En promos.js cada línea tiene: image (ruta), alt (texto corto de la oferta) y message (opcional, mensaje de WhatsApp del botón cuando ese flyer está activo). Para quitar una promoción, borra su línea; para agregar otra, copia una.
+- Sirven flyers verticales, cuadrados u horizontales: cada uno se muestra con su proporción real, sin recortes.
+- La portada muestra todos los flyers; merchandising.html y sistemas-web.html solo los de su línea.
+- El carrusel ocupa todo el ancho del contenido y muestra como máximo 2 flyers completos a la vez (1 en celular); nunca deja un flyer cortado en el borde. Cuando hay más flyers de los que caben, avanza solo cada 5 segundos, tiene flechas y puntos, y se desliza con el dedo. Con 1 o 2 flyers no se mueve porque ya se ven todos. Cada flyer se amplía con un clic. Debajo hay un botón "Quiero esta promoción" que abre WhatsApp con el mensaje del primer flyer visible.
+- Los flyers se muestran completos dentro de un recuadro 4:3 (sin recortes); si el flyer tiene otra proporción, el fondo se rellena con la misma imagen difuminada.
+- Mientras una imagen no exista, se muestra una diapositiva automática con el texto de "alt", así la sección nunca queda vacía.
+- Los precios "desde S/ 0.63 por unidad" y "desde S/ 250" también aparecen en la franja superior, el hero y el plan Landing Page de merchandising.html y sistemas-web.html. Si cambian, búscalos en esos dos archivos.
+
+DATOS QUE DEBES CONFIRMAR O AJUSTAR (son promesas comerciales)
+- "Respuesta / propuesta en menos de 24 h" (aparece en franjas, pasos y formularios).
+- "Muestra virtual gratis con tu logo" (merchandising).
+- "Entrega estimada desde 7 días hábiles" (landing) y "desde 15 días hábiles" (web corporativa) en sistemas-web.html.
+- Lo que incluye cada plan web (listas de la sección Planes).
+- "Emitimos el comprobante correspondiente a nombre de tu empresa" (pregunta frecuente sobre pago).
+- Campaña "Navidad 2026": el texto está en la franja de ocasiones, el sticker del hero y una etiqueta de producto. Cámbialo cuando pase la temporada (por ejemplo, "Día de la Madre", "Fiestas Patrias", "Aniversario").
+Si quieres mostrar precios ("Desde S/ ..."), agrégalos en el bloque .plan-price de cada plan; los precios de referencia suelen aumentar las consultas.
+
+PARA ACTIVAR TESTIMONIOS
+En merchandising.html y sistemas-web.html hay una sección id="testimonios" con el atributo hidden. Reemplaza los textos por opiniones reales de clientes (nombre, cargo y empresa) y elimina la palabra hidden de la etiqueta <section>. No publiques testimonios inventados.
+
+FOTOS DE PRODUCTOS ("LO MÁS PEDIDO")
+- Las fotos viven en assets/productos. Ya están colocadas las 8: lapiceros, tomatodos/botellas, tazas, polos, gorras, bolsas, libretas/agendas y kits. Los originales .png están en assets/originales/productos (la web no los carga).
+- Cada foto tiene 4 versiones ya recortadas a 4:3 y enfocadas (nombre-300, -600, -900 y -1200.webp). El navegador elige la que mejor encaja con el tamaño del recuadro y la pantalla; así se ven nítidas. Una sola imagen de 1400 px reducida a 280 px por el navegador se veía borrosa.
+- Para cambiar o agregar una foto: recórtala en proporción 4:3 y guárdala a 600 px de ancho (450 de alto) en assets/productos, con nombre sin espacios ni tildes y comprimida (menos de 100 KB). Luego, en merchandising.html, dentro del div.product-media de ese producto, reemplaza el <svg> por:
+  <img src="assets/productos/nombre.webp" alt="Descripción del producto" loading="lazy">
+  Con 600 px de ancho se ve nítida en escritorio y en celular. Evita subir la foto original de 1500 px o más: se ve borrosa al reducirse tanto.
+
+PARA VER EL SITIO
+Abre index.html en Chrome, Edge o Firefox. Los catálogos Heyzine y la tipografía requieren internet.
+
+PARA PUBLICAR
+Sube todos los archivos HTML, styles.css, promos.js, script.js y la carpeta assets al mismo directorio del hosting (puedes omitir assets/originales: la web no la usa).
+Cuando tengas el dominio definitivo:
+1. Reemplaza en las etiquetas <meta property="og:image"> la ruta relativa por la URL completa (https://tudominio.com/assets/og/...). Así se verá la imagen al compartir en WhatsApp y redes. Las imágenes de assets/og ya tienen el tamaño y peso que WhatsApp exige.
+2. Verifica el dominio en Google Search Console y envía un sitemap.xml con las tres páginas.
+3. Instala Google Analytics 4 o el píxel de Meta para medir los clics en WhatsApp (todos los enlaces tienen la clase wa-link, fácil de rastrear como evento).
+
+SEO: LO QUE YA TIENE LA WEB
+- Título y descripción únicos por página, escritos con las búsquedas reales: "merchandising personalizado Lima", "regalos corporativos", "diseño de páginas web Perú", "sistemas a medida".
+- Un solo H1 por página con la palabra clave, subtítulos descriptivos, textos con "Lima" y "Perú", y nombres de archivo e "alt" descriptivos en todas las fotos.
+- Datos estructurados (schema.org): LocalBusiness con dirección, teléfono, catálogo de servicios y logo; Organization + WebSite en la portada; FAQPage con las preguntas frecuentes.
+- URL canónica, Open Graph y Twitter Cards con imagen absoluta (vista previa al compartir en WhatsApp, Facebook e Instagram), favicon, sitemap.xml, robots.txt y .htaccess con redirecciones 301 de las páginas antiguas, caché y compresión.
+- Velocidad: imágenes WebP en varios tamaños, carga diferida, CSS compartido. La web completa pesa menos de 5 MB.
+
+SEO: LO QUE DEBES HACER TÚ AL PUBLICAR (en orden)
+1. DOMINIO. Las URL absolutas usan https://vanysperu.com (tomado de tu correo). Si tu dominio es otro, o usa "www", haz un buscar-y-reemplazar de "vanysperu.com" en: index.html, merchandising.html, sistemas-web.html, sitemap.xml, robots.txt y .htaccess.
+2. Sube también sitemap.xml, robots.txt y .htaccess a la raíz del hosting, junto a los HTML.
+3. HTTPS. Instala el certificado SSL (en cPanel suele ser gratis con Let's Encrypt) y luego activa en .htaccess las líneas de "Forzar HTTPS".
+4. GOOGLE SEARCH CONSOLE (search.google.com/search-console): verifica el dominio, envía sitemap.xml y usa "Inspección de URL > Solicitar indexación" para las tres páginas. Así Google las encuentra en días en vez de semanas.
+5. PERFIL DE NEGOCIO DE GOOGLE (google.com/business): crea el perfil con la dirección, el teléfono, el enlace a la web, horario, categoría "Tienda de artículos promocionales" (y como secundaria "Diseñador de sitios web"), y sube fotos reales de productos entregados. Para búsquedas como "merchandising Lima" este perfil pesa más que cualquier etiqueta. Pide a cada cliente satisfecho una reseña con el enlace del perfil.
+6. CONTENIDO Y ENLACES: publica en Instagram los pedidos entregados y enlaza siempre a la web; pide a clientes y proveedores que enlacen tu web desde las suyas; registra VANYS en directorios de empresas del Perú. Si más adelante quieres crecer, una página por producto estrella (por ejemplo "lapiceros personalizados en Lima") con fotos reales y precios referenciales atrae búsquedas muy específicas.
+7. MEDICIÓN: instala Google Analytics 4 (y el píxel de Meta si harás anuncios). Todos los botones de WhatsApp tienen la clase "wa-link", fácil de medir como evento de conversión.
+
+Expectativa honesta: con todo lo anterior, una web nueva suele empezar a aparecer para su propio nombre en días y para búsquedas genéricas ("merchandising Lima") en semanas o meses, según la competencia. Ningún código garantiza una posición; lo que más acelera es el Perfil de Negocio con reseñas y el contenido real (fotos de pedidos, clientes, casos).

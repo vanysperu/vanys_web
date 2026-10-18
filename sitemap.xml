@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
+  <url>
+    <loc>https://vanysperu.com/</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+    <image:image><image:loc>https://vanysperu.com/assets/og/inicio.jpg</image:loc><image:title>VANYS: merchandising y páginas web para empresas en Perú</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://vanysperu.com/merchandising.html</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/lapiceros-personalizados-vanys-en-exhibicion-1200.webp</image:loc><image:title>Lapiceros personalizados con logo</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/botellas-vanys-en-estudio-moderno-1200.webp</image:loc><image:title>Tomatodos y termos personalizados</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/tazas-corporativas-sobre-pedestales-elegantes-1200.webp</image:loc><image:title>Tazas personalizadas para empresas</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/polo-y-camisetas-corporativas-personalizadas-1200.webp</image:loc><image:title>Polos y camisas corporativas personalizadas</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/coleccion-de-gorras-vanys-en-estudio-moderno-1200.webp</image:loc><image:title>Gorras bordadas con logo</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/expositor-de-bolsas-promocionales-vanys-1200.webp</image:loc><image:title>Bolsas y mochilas promocionales</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/expositor-corporativo-de-papeleria-vanys-1200.webp</image:loc><image:title>Libretas y agendas personalizadas</image:title></image:image>
+    <image:image><image:loc>https://vanysperu.com/assets/productos/kit-corporativo-vanys-en-azul-y-naranja-1200.webp</image:loc><image:title>Kits y regalos corporativos</image:title></image:image>
+  </url>
+  <url>
+    <loc>https://vanysperu.com/sistemas-web.html</loc>
+    <lastmod>2026-10-17</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image><image:loc>https://vanysperu.com/assets/og/sistemas-web.jpg</image:loc><image:title>Diseño de páginas web y sistemas para empresas</image:title></image:image>
+  </url>
+</urlset>

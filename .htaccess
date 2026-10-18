@@ -1,0 +1,34 @@
+# VANYS · Configuración para hosting Apache (cPanel y similares).
+# Si el hosting no usa Apache, este archivo simplemente se ignora.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Páginas antiguas: redirección permanente (301) a las nuevas, para no perder posicionamiento ni enlaces.
+  RewriteRule ^publicidad\.html$ /merchandising.html [R=301,L]
+  RewriteRule ^sistemas\.html$ /sistemas-web.html [R=301,L]
+
+  # Forzar HTTPS y una sola versión del dominio (sin www).
+  # Activa estas líneas (quita el #) cuando el certificado SSL esté instalado. Si tu dominio usa www, invierte la regla.
+  # RewriteCond %{HTTPS} !=on [OR]
+  # RewriteCond %{HTTP_HOST} ^www\. [NC]
+  # RewriteRule ^ https://vanysperu.com%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# Caché del navegador: las imágenes, el CSS y el JS se guardan y la web carga más rápido en visitas repetidas.
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/gif "access plus 1 year"
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+</IfModule>
+
+# Compresión de texto (HTML, CSS, JS).
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css application/javascript application/json text/xml image/svg+xml
+</IfModule>
+
+AddType image/webp .webp

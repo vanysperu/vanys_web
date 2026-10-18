@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /assets/originales/
+
+Sitemap: https://vanysperu.com/sitemap.xml
