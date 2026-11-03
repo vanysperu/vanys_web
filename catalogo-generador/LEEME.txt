@@ -19,7 +19,7 @@ NO SUBIR AL HOSTING
 CÓMO SE VE
 - En el hosting: https://vanysperu.com/catalogo  (redirige solo a /catalogo/)
 - Enlace directo a un producto: https://vanysperu.com/catalogo/#p=mta0001
-- Enlace con filtros: /catalogo/?categoria=lapiceros  ·  ?q=bambu  ·  ?sublimables=1
+- Enlace con filtros: /catalogo/?categoria=lapiceros  ·  ?q=bambu
 - En tu PC: abre catalogo/index.html con doble clic, o mejor con un servidor local
   (por ejemplo la extensión "Live Server" de VS Code) para probar los enlaces.
 

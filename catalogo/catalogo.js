@@ -70,8 +70,6 @@
   const state = {
     q: params.get('q') || '',
     cat: byCat(params.get('categoria')),
-    sub: params.get('sublimables') === '1',
-    priced: params.get('conprecio') === '1',
     sort: params.get('orden') || 'relevance',
     shown: PAGE_SIZE,
   };
@@ -80,8 +78,6 @@
     const sp = new URLSearchParams();
     if (state.q) sp.set('q', state.q);
     if (state.cat !== 'all') sp.set('categoria', state.cat);
-    if (state.sub) sp.set('sublimables', '1');
-    if (state.priced) sp.set('conprecio', '1');
     if (state.sort !== 'relevance') sp.set('orden', state.sort);
     const qs = sp.toString();
     history.replaceState(history.state, '', location.pathname + (qs ? '?' + qs : '') + location.hash);
@@ -91,8 +87,6 @@
     const terms = norm(state.q).split(/\s+/).filter(Boolean);
     return products.filter((p) =>
       (ignoreCat || state.cat === 'all' || p.category === state.cat) &&
-      (!state.sub || p.sublimable) &&
-      (!state.priced || p.p100 != null) &&
       terms.every((t) => p.hay.includes(t)));
   }
   function sorted(list) {
@@ -206,10 +200,8 @@
   // --- Buscador, filtros y orden --------------------------------------------
   const q = $('#cv-q');
   const qClear = $('#cv-q-clear');
-  const subEl = $('#cv-f-sub');
-  const priceEl = $('#cv-f-price');
   const sortEl = $('#cv-sort');
-  q.value = state.q; subEl.checked = state.sub; priceEl.checked = state.priced; sortEl.value = state.sort;
+  q.value = state.q; sortEl.value = state.sort;
   qClear.hidden = !state.q;
   let t;
   q.addEventListener('input', () => {
@@ -219,12 +211,10 @@
   });
   $('#cv-search-form').addEventListener('submit', (e) => { e.preventDefault(); q.blur(); $('.cv-layout').scrollIntoView({ behavior: 'smooth' }); });
   qClear.addEventListener('click', () => { q.value = ''; qClear.hidden = true; state.q = ''; update(); q.focus(); });
-  subEl.addEventListener('change', () => { state.sub = subEl.checked; state.shown = PAGE_SIZE; update(); });
-  priceEl.addEventListener('change', () => { state.priced = priceEl.checked; state.shown = PAGE_SIZE; update(); });
   sortEl.addEventListener('change', () => { state.sort = sortEl.value; update(); });
   $('#cv-reset').addEventListener('click', () => {
-    Object.assign(state, { q: '', cat: 'all', sub: false, priced: false, sort: 'relevance', shown: PAGE_SIZE });
-    q.value = ''; qClear.hidden = true; subEl.checked = false; priceEl.checked = false; sortEl.value = 'relevance';
+    Object.assign(state, { q: '', cat: 'all', sort: 'relevance', shown: PAGE_SIZE });
+    q.value = ''; qClear.hidden = true; sortEl.value = 'relevance';
     update();
   });
 
