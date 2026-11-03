@@ -104,6 +104,7 @@
 .cv-cat[aria-pressed="true"] { background: var(--cv-navy); color: #fff; }
 .cv-cat[aria-pressed="true"] small { background: var(--cv-orange); color: #fff; }
 
+.cv-notice { display: flex; align-items: center; gap: 8px; margin: 0 0 14px; padding: 9px 14px; border-radius: 12px; background: #fff4ea; border: 1px solid #ffd9b8; color: #8a4310; font-size: .85rem; font-weight: 700; line-height: 1.35; }
 .cv-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; flex-wrap: wrap; }
 .cv-count { margin: 0; color: var(--cv-muted); font-size: .92rem; }
 .cv-count b { color: var(--cv-navy); }
