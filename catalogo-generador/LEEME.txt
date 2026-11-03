@@ -1,0 +1,93 @@
+VANYS - Catálogo digital (/catalogo)
+====================================
+
+QUÉ SE SUBE AL HOSTING
+- catalogo/ ............ el catálogo completo. Es lo único nuevo que hay que subir.
+    index.html ......... página del catálogo (buscador, categorías, filtros, tarjetas, ficha y WhatsApp)
+    catalogo.css ....... estilos propios del catálogo (prefijo "cv-"; no usa ni cambia ../styles.css)
+    catalogo.js ........ lógica del catálogo (no usa ni cambia ../script.js)
+    carrito.js ......... carrito de cotización y envío al sistema
+    config.js .......... URL del sistema de cotizaciones y API key del carrito
+    data/productos.js .. productos, colores, códigos y precios de venta. Se genera desde el Excel.
+    img/ ............... fotos de producto extraídas del Excel (WebP, máx. 640 px)
+- El catálogo usa, solo para leerlos, el logo, los íconos y una mascota de ../assets/.
+
+NO SUBIR AL HOSTING
+- NUEVO CATALOGO SERIGRAFIA DTF.xlsx: contiene costos, utilidades y stock.
+- catalogo-generador/ (esta carpeta): es una herramienta local.
+
+CÓMO SE VE
+- En el hosting: https://vanysperu.com/catalogo  (redirige solo a /catalogo/)
+- Enlace directo a un producto: https://vanysperu.com/catalogo/#p=mta0001
+- Enlace con filtros: /catalogo/?categoria=lapiceros  ·  ?q=bambu  ·  ?sublimables=1
+- En tu PC: abre catalogo/index.html con doble clic, o mejor con un servidor local
+  (por ejemplo la extensión "Live Server" de VS Code) para probar los enlaces.
+
+CÓMO ACTUALIZAR EL CATÁLOGO CUANDO CAMBIE EL EXCEL
+1. Instala Node.js 18 o superior (una sola vez).
+2. Abre una terminal en esta carpeta (catalogo-generador) y ejecuta (una sola vez):
+     npm install
+3. Reemplaza el Excel en la carpeta principal (mismo nombre) y ejecuta:
+     node generar.js
+   o, si el archivo tiene otro nombre o está en otro lugar:
+     node generar.js "C:\ruta\al\archivo.xlsx"
+4. El generador reescribe catalogo/data/productos.js y catalogo/img/, y al final valida
+   contra el Excel (SKU, códigos, colores, precios, imágenes y que no se filtren costos).
+   Todas las líneas deben decir PASS. El detalle queda en catalogo-generador/reporte.json.
+5. Sube de nuevo la carpeta catalogo/ al hosting.
+
+REGLAS QUE USA EL GENERADOR (para mantener el Excel compatible)
+- Se publican solo "Precio x100" (columna K) y "PRECIO X 1000" (columna M).
+  Nunca se publican: costo/insumo (H), CP 100 / CP 1000 (I, J), utilidad (L, N), stock (E, F)
+  ni la tabla lateral de técnicas.
+- Cada SKU (columna A) es un producto. Las filas siguientes con código o color son sus variantes.
+- En hojas sin SKU (Tazas, Consumibles) un producto empieza en cada fila con foto propia.
+- El precio de una variante sale de su fila si tiene costo propio; si su celda de costo está
+  combinada con la de arriba, usa el precio de esa fila. Así se ignoran los valores sueltos
+  (1.28, 0.64, 0…) que quedan en filas de variante sin costo.
+- Las hojas "TAZA CERAMICA Y VIDRIO" y "CONSUMIBLES PERSONALIZADOS" solo tienen la columna
+  PRECIO (costo), así que se muestran como "Precio a consultar".
+- La hoja TEXTILES no se publica (hoy es una copia de DESTAPADOR). Si se llena con textiles
+  reales, hay que activarla en generar.js (objeto SHEETS).
+- Las imágenes fuera de la columna IMAGEN (insignias "20%", "10%", "Llegará en el contenedor…")
+  no se publican.
+- Para agregar o renombrar una hoja/categoría, edita el objeto SHEETS al inicio de generar.js.
+
+CARRITO DE COTIZACIÓN (catalogo/carrito.js + catalogo/config.js)
+- El cliente añade productos (color + cantidad) desde la tarjeta o la ficha, revisa el carrito,
+  deja sus datos y envía UNA solicitud. No hay pagos.
+- El carrito se guarda en el navegador del cliente (localStorage); solo guarda producto,
+  variante y cantidad. Los precios se recalculan siempre con el catálogo vigente.
+- Tramo de precio por línea: 1,000 u. o más → precio x1000; de 100 a 999 → precio x100;
+  menos de 100 o sin precio publicado → "A cotizar" (no suma al total referencial).
+- Envío: catalogo/config.js → "endpoint" y "headers" (X-Api-Key).
+    · Con URL (como está hoy): el navegador envía la solicitud directo al sistema de cotizaciones,
+      también si la web se abre con doble clic. Si falla, se ofrece WhatsApp como respaldo
+      (whatsappFallback) y el carrito NO se borra.
+    · Vacío: la solicitud se arma y se abre en WhatsApp.
+
+ENVÍO AL SISTEMA DE COTIZACIONES
+  POST <dominio-del-sistema>/api/public/quotation-request   ·   cabecera X-Api-Key: vnk_...
+  - La URL y la key están en catalogo/config.js. Hoy apuntan a http://localhost:4750 (desarrollo).
+    Al publicar, cambia la URL por el dominio del sistema (el hosting no ve tu PC).
+  - La key queda visible en el código de la página. Si llegan pedidos falsos: revócala en el
+    sistema (Configuración → API keys), crea otra y ponla en config.js.
+  - El sistema debe permitir CORS desde el dominio de la web (hoy lo permite).
+  - Cuerpo que se envía:
+      { "client": { "phone": "987654321", "name": "Ana Pérez", "email": "ana@demo.pe",
+                    "document_type": 6, "document_number": "20123456789" },   ← email y RUC opcionales
+        "items": [ { "sku": "A1100-02", "quantity": 2000 } ] }
+  - "sku" es el CÓDIGO del color (A1100-02); si el producto no tiene código, va su SKU (MTA0001).
+    Para que el producto entre a la cotización, el sistema debe tener ese mismo código como SKU.
+    Si no existe, la cotización se crea igual y el equipo recibe el aviso en la campana.
+  - Antes de enviar se valida como el sistema: celular 6-9 dígitos (sin el 51), nombre solo
+    letras, RUC 11 dígitos, hasta 50 SKU distintos.
+  - Al cliente se le muestra "COT-<quotation_id>". Si el sistema responde 400, se muestra su mensaje;
+    cualquier otro error muestra un aviso genérico con la opción de WhatsApp.
+  - Empresa y comentarios no existen en el sistema: con el envío al sistema el formulario no los
+    pide, y en la pantalla final se invita a escribir por WhatsApp para dar más detalles.
+
+OTROS AJUSTES
+- Número de WhatsApp del catálogo: constante WHATSAPP_NUMBER al inicio de catalogo/catalogo.js
+  (es el mismo de script.js; si cambia, edítalo en ambos).
+- Texto sobre precios del pie de página: catalogo/index.html (sección cv-footer).

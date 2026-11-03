@@ -29,6 +29,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/mascotas/mascota-merchandising.webp" type="image/webp">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="catalogo/integracion-merch.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://vanysperu.com/#vanys","name":"VANYS","url":"https://vanysperu.com/","logo":"https://vanysperu.com/assets/logo/logo-vanys.png","image":"https://vanysperu.com/assets/og/merchandising.jpg","description":"Merchandising personalizado, regalos corporativos, páginas web y sistemas para empresas en Lima y todo el Perú.","email":"hola@vanysperu.com","telephone":"+51952350797","address":{"@type":"PostalAddress","streetAddress":"Av. Manuel Olguín 211","addressLocality":"Lima","addressRegion":"Lima","addressCountry":"PE"},"areaServed":{"@type":"Country","name":"Peru"},"sameAs":["https://www.instagram.com/vanys_peru/"],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Merchandising personalizado para empresas","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Lapiceros personalizados con logo"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tomatodos y termos personalizados"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tazas personalizadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Polos y camisas corporativas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Gorras bordadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Bolsas y tote bags promocionales"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Libretas y agendas personalizadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Kits y regalos corporativos"}}]}}
 </script>
@@ -54,7 +55,7 @@
   <nav class="navlinks" id="navlinks" aria-label="Navegación principal">
     <a href="#productos">Productos</a>
     <a href="#promociones">Promociones</a>
-    <a href="#catalogos">Catálogos</a>
+    <a href="catalogo/index.html">Catálogo</a>
     <a href="#ocasiones">Ocasiones</a>
     <a href="#preguntas">Preguntas</a>
     <a href="sistemas-web.html">Sistemas y Web</a>
@@ -71,7 +72,7 @@
     <p class="lead">Lapiceros, tomatodos, polos, gorras, bolsas y regalos corporativos con tu logo. Te mostramos cómo quedará tu diseño antes de producir y te cotizamos en menos de 24 horas.</p>
     <div class="hero-actions">
       <a class="btn btn-wa btn-lg wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado con mi logo. ¿Me ayudan?"><svg class="ico"><use href="#i-wa"/></svg> Cotizar por WhatsApp</a>
-      <a class="btn btn-outline btn-lg" href="#catalogos">Ver catálogos ↓</a>
+      <a class="btn btn-outline btn-lg" href="catalogo/index.html">Ver catálogo completo →</a>
     </div>
     <div class="hero-trust"><span>Desde S/ 0.63 + IGV por unidad</span><span>Muestra virtual gratis</span><span>Envíos a todo el Perú</span></div>
   </div>
@@ -148,31 +149,29 @@
   </div>
 </div></section>
 
-<!-- CATÁLOGOS -->
+<!-- CATÁLOGO DIGITAL: enlaza al catálogo con carrito (carpeta catalogo/). Estilos en catalogo/integracion-merch.css. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="vc-i-cart" viewBox="0 0 24 24"><path d="M7 18a2 2 0 1 1 0 4 2 2 0 0 1 0-4m10 0a2 2 0 1 1 0 4 2 2 0 0 1 0-4M1 2h3.27l.94 2H21a1 1 0 0 1 .88 1.47l-3.58 6.49A2 2 0 0 1 16.55 13H8.1l-.9 1.63-.03.12a.25.25 0 0 0 .25.25H19v2H7a2 2 0 0 1-1.75-2.96l1.36-2.45L3 4H1zm5.16 4 2.39 5h8l2.76-5z"/></symbol></svg>
 <section class="section soft" id="catalogos"><div class="wrap">
-  <div class="catalog-band reveal">
-    <div class="catalog-copy">
-      <div class="eyebrow">Catálogos interactivos</div>
-      <h2>Explora cientos de productos <span>y elige los tuyos.</span></h2>
-      <p>Pasa las páginas aquí mismo. Cuando encuentres algo que te guste, anota el nombre o código y envíanoslo por WhatsApp para cotizarlo.</p>
-      <a class="btn btn-wa btn-sm wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Vi el catálogo y quiero cotizar: ___ (producto o código). Cantidad aproximada: ___"><svg class="ico"><use href="#i-wa"/></svg> Cotizar lo que vi en el catálogo</a>
-    </div>
-    <div class="catalog-options">
-      <div class="catalog-option"><div class="catalog-thumb"><img src="assets/mascotas/mascota-merchandising.webp" alt="Catálogo general de productos VANYS" width="1000" height="954" loading="lazy" decoding="async"></div><strong>Catálogo de productos</strong><small>Tomatodos, tazas, tecnología, textiles y más</small><button type="button" data-catalog="products">Ver catálogo →</button></div>
-      <div class="catalog-option"><div class="catalog-thumb"><img src="assets/mascotas/mascota-promociones.webp" alt="Catálogo de promociones VANYS" width="1000" height="912" loading="lazy" decoding="async"></div><strong>Catálogo de promociones</strong><small>Combos y ofertas para campañas</small><button type="button" data-catalog="promos">Ver catálogo →</button></div>
-      <div class="catalog-option"><div class="catalog-thumb"><img src="assets/mascotas/mascota-lapiceros.webp" alt="Catálogo de lapiceros VANYS" width="1000" height="912" loading="lazy" decoding="async"></div><strong>Catálogo de lapiceros</strong><small>Modelos, colores y acabados</small><button type="button" data-catalog="pens">Ver catálogo →</button></div>
-    </div>
-  </div>
-  <div class="viewer" id="catalogViewer">
-    <div class="viewer-top">
-      <div><strong id="viewerTitle">Catálogo de productos</strong><small>Pasa las páginas directamente desde este visor.</small></div>
-      <div class="btn-group">
-        <a id="viewerQuote" class="btn btn-wa btn-sm wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Vi el catálogo y quiero cotizar: ___"><svg class="ico"><use href="#i-wa"/></svg> Cotizar lo que vi</a>
-        <a id="openCatalog" class="btn btn-outline btn-sm" href="https://heyzine.com/flip-book/eefcd7b8f8.html" target="_blank" rel="noopener">Abrir en otra pestaña ↗</a>
+  <div class="vc-band reveal">
+    <div class="vc-copy">
+      <div class="eyebrow">Catálogo digital</div>
+      <h2>Más de 300 productos <span>con precios, colores y carrito.</span></h2>
+      <p>Busca por nombre o código, elige colores y cantidades, y arma tu carrito para pedir una sola cotización.</p>
+      <ul class="vc-points"><li>Precios por unidad para 100 y 1,000 unidades</li><li>Fotos, códigos y colores disponibles</li><li>Envía tu carrito y te cotizamos en menos de 24 h</li></ul>
+      <div class="vc-actions">
+        <a class="btn btn-primary btn-lg" href="catalogo/index.html"><svg class="ico"><use href="#vc-i-cart"/></svg> Ver catálogo completo</a>
       </div>
     </div>
-    <iframe id="catalogFrame" title="Catálogo interactivo VANYS" src="about:blank" loading="lazy" allowfullscreen></iframe>
-    <div class="viewer-fallback">Si el visor no carga, <a id="fallbackLink" href="https://heyzine.com/flip-book/eefcd7b8f8.html" target="_blank" rel="noopener">abre el catálogo directamente aquí ↗</a>.</div>
+    <div class="vc-cats">
+      <a class="vc-cat" href="catalogo/index.html?categoria=metal"><span class="vc-cat-img"><img src="catalogo/img/foto-001.webp" alt="" loading="lazy" decoding="async"></span><strong>Termos y mugs</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tomatodos"><span class="vc-cat-img"><img src="catalogo/img/foto-043.webp" alt="" loading="lazy" decoding="async"></span><strong>Tomatodos</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=lapiceros"><span class="vc-cat-img"><img src="catalogo/img/foto-021.webp" alt="" loading="lazy" decoding="async"></span><strong>Lapiceros</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=libretas"><span class="vc-cat-img"><img src="catalogo/img/foto-120.webp" alt="" loading="lazy" decoding="async"></span><strong>Libretas</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tecnologia"><span class="vc-cat-img"><img src="catalogo/img/foto-165.webp" alt="" loading="lazy" decoding="async"></span><strong>Tecnología</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=bolsas"><span class="vc-cat-img"><img src="catalogo/img/foto-013.webp" alt="" loading="lazy" decoding="async"></span><strong>Bolsas y mochilas</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=llaveros"><span class="vc-cat-img"><img src="catalogo/img/foto-158.webp" alt="" loading="lazy" decoding="async"></span><strong>Llaveros</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tazas"><span class="vc-cat-img"><img src="catalogo/img/foto-263.webp" alt="" loading="lazy" decoding="async"></span><strong>Tazas</strong><small>Ver productos →</small></a>
+    </div>
   </div>
 </div></section>
 
@@ -345,17 +344,19 @@
 <footer class="site-footer"><div class="wrap">
   <div class="footer-main">
     <div class="footer-brand"><img src="assets/logo/logo-vanys.webp" alt="VANYS" width="640" height="213" loading="lazy"><p>Merchandising personalizado, regalos corporativos, páginas web y sistemas para empresas en Perú.</p><a class="footer-cta wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado."><svg class="ico"><use href="#i-wa"/></svg> Cotiza por WhatsApp</a></div>
-    <div class="footer-nav"><strong class="footer-column-title">Explora</strong><nav class="footer-links" aria-label="Enlaces del pie de página"><a href="index.html">Inicio</a><a href="#productos">Productos</a><a href="#promociones">Promociones</a><a href="#catalogos">Catálogos</a><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas frecuentes</a><a href="sistemas-web.html">Sistemas y Web</a></nav></div>
+    <div class="footer-nav"><strong class="footer-column-title">Explora</strong><nav class="footer-links" aria-label="Enlaces del pie de página"><a href="index.html">Inicio</a><a href="#productos">Productos</a><a href="#promociones">Promociones</a><a href="catalogo/index.html">Catálogo</a><a href="#como-funciona">Cómo funciona</a><a href="#preguntas">Preguntas frecuentes</a><a href="sistemas-web.html">Sistemas y Web</a></nav></div>
     <div class="footer-contact"><strong class="footer-column-title">Contáctanos</strong><a class="footer-contact-item" href="https://wa.me/51952350797" target="_blank" rel="noopener noreferrer"><strong>WhatsApp</strong><span>+51 952 350 797</span></a><a class="footer-contact-item" href="mailto:hola@vanysperu.com"><strong>Correo</strong><span>hola@vanysperu.com</span></a><a class="footer-contact-item" href="https://www.instagram.com/vanys_peru/" target="_blank" rel="noopener noreferrer"><strong>Instagram</strong><span>@vanys_peru</span></a><div class="footer-contact-item"><strong>Oficina</strong><span>Av. Manuel Olguín 211, Lima</span></div></div>
   </div>
   <div class="footer-bottom"><span>© <span id="year"></span> VANYS. Todos los derechos reservados.</span><span>Lima, Perú · Envíos a todo el país</span></div>
 </div></footer>
 
 <a class="page-switch-float" href="sistemas-web.html">¿Buscas una web? <span aria-hidden="true">→</span></a>
+<a class="vc-float" href="catalogo/index.html"><span class="vc-float-ico"><svg aria-hidden="true"><use href="#vc-i-cart"/></svg></span><span class="vc-float-txt">Ver catálogo completo<small>Precios, colores y tu carrito</small></span><b class="vc-count" data-vc-count>0</b></a>
 <a class="whatsapp-float wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado." aria-label="Escribir a VANYS por WhatsApp" title="Escríbenos por WhatsApp"><span class="pulse"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg></a>
-<div class="mobile-bar"><a class="btn btn-outline" href="#catalogos">Ver catálogos</a><a class="btn btn-wa wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado con mi logo."><svg class="ico"><use href="#i-wa"/></svg> Cotizar por WhatsApp</a></div>
+<div class="mobile-bar"><a class="btn vc-mobile-cta" href="catalogo/index.html"><svg aria-hidden="true"><use href="#vc-i-cart"/></svg> Catálogo y carrito <b class="vc-count" data-vc-count>0</b></a><a class="btn btn-wa wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado con mi logo."><svg class="ico"><use href="#i-wa"/></svg> Cotizar por WhatsApp</a></div>
 
 <script src="promos.js" defer></script>
 <script src="script.js" defer></script>
+<script src="catalogo/integracion-merch.js" defer></script>
 </body>
 </html>

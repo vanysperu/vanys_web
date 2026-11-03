@@ -1,0 +1,71 @@
+/* ==========================================================================
+   VANYS · Catálogo digital dentro de merchandising.html
+   Sección "Catálogo digital" + botón flotante "Catálogo y carrito".
+   Usa las variables de ../styles.css (--navy, --orange…). Prefijo "vc-".
+   ========================================================================== */
+
+/* --- Sección ----------------------------------------------------------- */
+.vc-band { position: relative; overflow: hidden; display: grid; grid-template-columns: minmax(0, .9fr) minmax(0, 1.6fr); gap: 28px; align-items: center; padding: 32px; border-radius: 25px; color: #fff; background: radial-gradient(ellipse at 90% 0%, #1c4f9a 0, transparent 55%), linear-gradient(115deg, #061a38, #08234a 55%, #0a3c78); box-shadow: 0 20px 45px #092b5226; }
+.vc-band::after { content: ""; position: absolute; width: 360px; height: 360px; right: -140px; bottom: -220px; border-radius: 50%; border: 2px dashed #ff790e55; pointer-events: none; }
+.vc-copy { position: relative; z-index: 1; }
+.vc-copy .eyebrow { color: #ffb27a; }
+.vc-copy h2 { font-size: clamp(1.7rem, 2.8vw, 2.5rem); line-height: 1.08; letter-spacing: -.04em; margin: 12px 0; color: #fff; }
+.vc-copy h2 span { color: #ff9b4b; }
+.vc-copy p { color: #d4e3f7; font-size: .93rem; margin: 0 0 16px; }
+.vc-points { list-style: none; margin: 0 0 20px; padding: 0; display: grid; gap: 7px; font-size: .86rem; font-weight: 700; color: #e6effb; }
+.vc-points li { display: flex; align-items: center; gap: 9px; }
+.vc-points li::before { content: "✓"; display: grid; place-items: center; flex: none; width: 20px; height: 20px; border-radius: 50%; background: #ff790e; color: #fff; font-size: .7rem; font-weight: 900; }
+.vc-actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.vc-actions .btn { gap: 8px; }
+.vc-cats { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; }
+.vc-cat { display: flex; flex-direction: column; align-items: center; gap: 8px; padding: 10px 10px 12px; border-radius: 16px; background: #ffffff12; border: 1px solid #ffffff2b; color: #fff; text-align: center; transition: transform .25s, background .25s, border-color .25s; }
+.vc-cat:hover { transform: translateY(-5px); background: #ffffff22; border-color: #ff9b4b; color: #fff; }
+.vc-cat-img { display: grid; place-items: center; width: 100%; height: 112px; padding: 8px; overflow: hidden; border-radius: 11px; background: #fff; }
+.vc-cat-img img { width: 100%; height: 100%; min-height: 0; object-fit: contain; }
+.vc-cat strong { font-size: .8rem; line-height: 1.25; }
+.vc-cat small { font-size: .7rem; font-weight: 800; color: #ffb27a; }
+
+/* --- Contador del carrito --------------------------------------------- */
+.vc-count { display: none; place-items: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: #fff; color: #ff5c18; font-size: .74rem; font-weight: 900; line-height: 1; }
+.vc-count.vc-has { display: inline-grid; }
+
+/* --- Botón flotante (escritorio) --------------------------------------- */
+/* Va en la esquina inferior derecha; el botón de WhatsApp de esta página sube y queda encima. */
+.whatsapp-float { bottom: 94px; }
+/* Guardado: círculo de 58 px (como WhatsApp). Desplegado (.vc-open, hover o foco): muestra el texto.
+   integracion-merch.js lo despliega solo cada cierto tiempo. */
+.vc-float { position: fixed; right: 20px; bottom: 20px; z-index: 61; display: flex; align-items: center; padding: 8px; border-radius: 999px; overflow: hidden; color: #fff; background: linear-gradient(100deg, var(--orange), #ff5c18); box-shadow: 0 14px 32px #ff5c1855; font-weight: 800; line-height: 1.15; transition: transform .25s, box-shadow .25s, padding .45s cubic-bezier(.2, .8, .2, 1); }
+.vc-float:hover { color: #fff; transform: translateY(-3px); box-shadow: 0 18px 38px #ff5c1870; }
+.vc-float-ico { position: relative; display: grid; place-items: center; width: 42px; height: 42px; flex: none; border-radius: 50%; background: #ffffff2e; transition: transform .45s cubic-bezier(.2, .8, .2, 1); }
+.vc-float-ico svg { width: 22px; height: 22px; fill: currentColor; }
+.vc-float-ico::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid #fff; opacity: 0; animation: pulse 2.4s ease-out infinite; }
+.vc-float-txt { display: flex; flex-direction: column; max-width: 0; margin-left: 0; opacity: 0; overflow: hidden; white-space: nowrap; font-size: .92rem; transition: max-width .5s cubic-bezier(.2, .8, .2, 1), margin .5s cubic-bezier(.2, .8, .2, 1), opacity .25s; }
+.vc-float-txt small { font-size: .7rem; font-weight: 700; opacity: .9; }
+.vc-float.vc-open, .vc-float:hover, .vc-float:focus-visible { padding-right: 18px; }
+.vc-float.vc-open .vc-float-txt, .vc-float:hover .vc-float-txt, .vc-float:focus-visible .vc-float-txt { max-width: 230px; margin-left: 10px; opacity: 1; transition-delay: 0s, 0s, .12s; }
+.vc-float.vc-open .vc-float-ico, .vc-float:hover .vc-float-ico { transform: rotate(-12deg) scale(1.05); }
+.vc-float .vc-count { position: absolute; top: 2px; left: 36px; min-width: 20px; height: 20px; font-size: .68rem; box-shadow: 0 2px 6px #00000033; }
+/* Brillo que cruza el botón al desplegarse */
+.vc-float::before { content: ""; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%; transform: skewX(-20deg); background: linear-gradient(90deg, transparent, #ffffff66, transparent); pointer-events: none; }
+.vc-float.vc-open::before { animation: vcShine 1.4s ease-in-out .35s; }
+@keyframes vcShine { from { left: -60%; } to { left: 130%; } }
+
+/* --- Barra inferior en celular (reemplaza "Ver catálogos") ------------- */
+.mobile-bar .vc-mobile-cta { position: relative; gap: 7px; background: linear-gradient(100deg, var(--orange), #ff5c18); color: #fff; border: 0; box-shadow: 0 8px 20px #ff790e40; animation: vcGlow 2.6s ease-in-out infinite; }
+.mobile-bar .vc-mobile-cta svg { width: 18px; height: 18px; fill: currentColor; flex: none; }
+@keyframes vcGlow { 0%, 100% { box-shadow: 0 6px 16px #ff790e33; } 50% { box-shadow: 0 6px 22px #ff790e88, 0 0 0 4px #ff790e22; } }
+
+/* --- Responsive -------------------------------------------------------- */
+@media (max-width: 1100px) {
+  .vc-band { grid-template-columns: 1fr; }
+}
+@media (max-width: 780px) {
+  .vc-float { display: none; }
+  .vc-band { padding: 24px 18px; gap: 20px; }
+  .vc-cats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .vc-actions .btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .vc-float, .vc-float::before, .vc-float.vc-open::before, .vc-float-ico::after, .mobile-bar .vc-mobile-cta { animation: none; }
+  .vc-float, .vc-float-txt, .vc-float-ico { transition: none; }
+}

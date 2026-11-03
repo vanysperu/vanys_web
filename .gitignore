@@ -1,0 +1,5 @@
+# Excel fuente: tiene costos, utilidades y stock. Nunca subirlo (el repositorio es público).
+*.xlsx
+# Herramienta local del catálogo
+catalogo-generador/node_modules/
+catalogo-generador/reporte.json

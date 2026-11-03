@@ -3,12 +3,14 @@ VANYS - Página web orientada a ventas
 
 ESTRUCTURA
 - index.html ........... Portada simple: bienvenida, la grulla que orienta y dos tarjetas para elegir entre Merchandising y Sistemas/Web. No tiene más secciones, para que el cliente elija sin distraerse.
-- merchandising.html ... Página de ventas de merchandising: productos con botón de cotización directa, catálogos Heyzine, ocasiones (incluye campaña Navidad 2026), kits corporativos, por qué VANYS, pasos, preguntas y cotizador.
+- merchandising.html ... Página de ventas de merchandising: productos con botón de cotización directa, sección y botón flotante del catálogo digital (catalogo/), ocasiones (incluye campaña Navidad 2026), kits corporativos, por qué VANYS, pasos, preguntas y cotizador.
 - sistemas-web.html .... Página de ventas de páginas web y sistemas: planes (Landing, Web corporativa, Sistema a medida), qué incluye, proceso, preguntas y cotizador.
 - publicidad.html y sistemas.html ... Redirigen a las páginas nuevas para conservar enlaces antiguos.
 - styles.css ........... Estilos compartidos por las tres páginas (antes estaban repetidos dentro de cada HTML).
 - promos.js ............ Flyers del carrusel de promociones (ruta, texto y mensaje de WhatsApp). Se editan solo aquí y aparecen en merchandising.html y sistemas-web.html.
-- script.js ............ Menú, enlaces de WhatsApp, carrusel de promociones, visor de catálogos, cotizador, preguntas frecuentes, animaciones y grulla guía.
+- catalogo/ ............ Catálogo digital con buscador, fichas y carrito de cotización (ver catalogo-generador/LEEME.txt).
+                         merchandising.html usa catalogo/integracion-merch.css y .js para su sección y su botón flotante.
+- script.js ............ Menú, enlaces de WhatsApp, carrusel de promociones, visor de catálogos (ya sin uso), cotizador, preguntas frecuentes, animaciones y grulla guía.
 - assets/ .............. Imágenes que carga la web, por carpeta:
     logo/ ............ logo-vanys.webp
     mascotas/ ........ mascotas en WebP y el GIF de la grulla corriendo
@@ -59,7 +61,7 @@ FOTOS DE PRODUCTOS ("LO MÁS PEDIDO")
   Con 600 px de ancho se ve nítida en escritorio y en celular. Evita subir la foto original de 1500 px o más: se ve borrosa al reducirse tanto.
 
 PARA VER EL SITIO
-Abre index.html en Chrome, Edge o Firefox. Los catálogos Heyzine y la tipografía requieren internet.
+Abre index.html en Chrome, Edge o Firefox. La tipografía requiere internet.
 
 PARA PUBLICAR
 Sube todos los archivos HTML, styles.css, promos.js, script.js y la carpeta assets al mismo directorio del hosting (puedes omitir assets/originales: la web no la usa).
