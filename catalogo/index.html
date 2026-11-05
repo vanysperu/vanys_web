@@ -9,7 +9,7 @@
 </script>
 <title>Catálogo de productos personalizables | VANYS</title>
 <meta name="description" content="Catálogo digital VANYS: termos, tomatodos, lapiceros, libretas, bolsas, tecnología y más para personalizar con tu logo. Precios por unidad para 100 y 1,000 unidades. Cotiza por WhatsApp.">
-<meta name="theme-aborta color" content="#082754">
+<meta name="theme-color" content="#082754">
 <link rel="canonical" href="https://vanysperu.com/catalogo/">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="VANYS">
@@ -25,7 +25,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="catalogo.css?v=4">
+<link rel="stylesheet" href="catalogo.css?v=8">
 </head>
 <body class="cv">
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
@@ -38,6 +38,7 @@
   <symbol id="cv-i-check" viewBox="0 0 24 24"><path d="m9 16.2-4.2-4.2-1.4 1.4L9 19 21 7l-1.4-1.4z"/></symbol>
   <symbol id="cv-i-trash" viewBox="0 0 24 24"><path d="M9 3h6l1 1h4v2H4V4h4zM6 7h12l-1 14H7zm3 2v10h2V9zm4 0v10h2V9z"/></symbol>
   <symbol id="cv-i-back" viewBox="0 0 24 24"><path d="M11.4 5.4 4.8 12l6.6 6.6 1.4-1.4L8.6 13H19v-2H8.6l4.2-4.2z"/></symbol>
+  <symbol id="cv-i-up" viewBox="0 0 24 24"><path d="M11 20V7.83l-5.6 5.6L4 12l8-8 8 8-1.4 1.41-5.6-5.58V20z"/></symbol>
 </svg>
 
 <a class="cv-skip" href="#cv-grid">Saltar a los productos</a>
@@ -45,6 +46,13 @@
 <header class="cv-header">
   <div class="cv-wrap cv-nav">
     <a class="cv-logo" href="../index.html" aria-label="VANYS inicio"><img src="../assets/logo/logo-vanys.webp" alt="VANYS" width="640" height="213"></a>
+    <!-- Buscador compacto: aparece cuando el del hero sale de la pantalla (mismo texto que #cv-q) -->
+    <form class="cv-msearch" role="search" id="cv-search-mini">
+      <label class="cv-sr" for="cv-q2">Buscar productos</label>
+      <svg class="cv-ico" aria-hidden="true"><use href="#cv-i-search"/></svg>
+      <input id="cv-q2" type="search" placeholder="Buscar producto, SKU o color…" autocomplete="off" enterkeyhint="search">
+      <button type="button" class="cv-search-clear" id="cv-q2-clear" aria-label="Borrar búsqueda" hidden><svg class="cv-ico"><use href="#cv-i-close"/></svg></button>
+    </form>
     <nav class="cv-navlinks" aria-label="Navegación del catálogo">
       <a class="cv-btn cv-btn-ghost cv-btn-sm cv-back" href="../merchandising.html" aria-label="Volver a Merchandising"><svg class="cv-ico"><use href="#cv-i-back"/></svg><span class="cv-back-long">Volver a Merchandising</span><span class="cv-back-short" aria-hidden="true">Merch</span></a>
       <a class="cv-btn cv-btn-wa cv-btn-sm cv-nav-wa" href="https://wa.me/51952350797" data-wa="Hola VANYS 👋 Estoy viendo su catálogo digital y quiero cotizar productos personalizados." target="_blank" rel="noopener"><svg class="cv-ico"><use href="#cv-i-wa"/></svg><span>WhatsApp</span></a>
@@ -79,7 +87,7 @@
     <section class="cv-results" aria-labelledby="cv-count">
       <p class="cv-notice" role="note"><span aria-hidden="true">📷</span> Estamos mejorando la calidad de las fotos de nuestros productos.</p>
       <div class="cv-toolbar">
-        <p class="cv-count" id="cv-count" aria-live="polite"></p>
+        <p class="cv-count" id="cv-count" aria-live="polite">Cargando productos…</p>
         <label class="cv-sort"><span>Ordenar</span>
           <select id="cv-sort">
             <option value="relevance">Destacados</option>
@@ -115,6 +123,8 @@
   <button type="button" class="cv-btn cv-btn-primary" data-open-cart><svg class="cv-ico"><use href="#cv-i-cart"/></svg> Ver carrito <b class="cv-cart-count" data-cart-count>0</b></button>
 </div>
 
+<button type="button" class="cv-totop" id="cv-totop" aria-label="Volver arriba"><svg class="cv-ico"><use href="#cv-i-up"/></svg></button>
+
 <dialog class="cv-modal" id="cv-modal" aria-labelledby="cv-m-title">
   <div class="cv-modal-inner" id="cv-modal-inner"></div>
 </dialog>
@@ -126,9 +136,8 @@
 <div class="cv-toast" id="cv-toast" role="status" aria-live="polite" hidden></div>
 
 <noscript><p class="cv-wrap" style="padding:24px 0">Activa JavaScript para ver el catálogo o escríbenos por WhatsApp al +51 952 350 797.</p></noscript>
-<script src="config.js?v=3" defer></script>
-<script src="data/productos.js" defer></script>
-<script src="catalogo.js?v=3" defer></script>
-<script src="carrito.js?v=3" defer></script>
+<script src="config.js?v=4" defer></script>
+<!-- datos.js trae los productos del sistema (api/productos.php) y luego carga catalogo.js y carrito.js -->
+<script src="datos.js?v=3" defer></script>
 </body>
 </html>

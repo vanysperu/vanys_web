@@ -28,7 +28,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="preload" as="image" href="assets/mascotas/mascota-merchandising.webp" type="image/webp">
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="styles.css?v=2">
 <link rel="stylesheet" href="catalogo/integracion-merch.css">
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"LocalBusiness","@id":"https://vanysperu.com/#vanys","name":"VANYS","url":"https://vanysperu.com/","logo":"https://vanysperu.com/assets/logo/logo-vanys.png","image":"https://vanysperu.com/assets/og/merchandising.jpg","description":"Merchandising personalizado, regalos corporativos, páginas web y sistemas para empresas en Lima y todo el Perú.","email":"hola@vanysperu.com","telephone":"+51952350797","address":{"@type":"PostalAddress","streetAddress":"Av. Manuel Olguín 211","addressLocality":"Lima","addressRegion":"Lima","addressCountry":"PE"},"areaServed":{"@type":"Country","name":"Peru"},"sameAs":["https://www.instagram.com/vanys_peru/"],"hasOfferCatalog":{"@type":"OfferCatalog","name":"Merchandising personalizado para empresas","itemListElement":[{"@type":"Offer","itemOffered":{"@type":"Service","name":"Lapiceros personalizados con logo"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tomatodos y termos personalizados"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Tazas personalizadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Polos y camisas corporativas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Gorras bordadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Bolsas y tote bags promocionales"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Libretas y agendas personalizadas"}},{"@type":"Offer","itemOffered":{"@type":"Service","name":"Kits y regalos corporativos"}}]}}
@@ -91,14 +91,14 @@
   <div class="trust-item"><span>💬</span> Atención directa por WhatsApp</div>
 </div></div>
 
-<!-- PROMOCIONES (se editan en promos.js) -->
+<!-- PROMOCIONES: anuncios de la zona "mer" del sistema (Ventas → Anuncios); promos.js es el respaldo -->
 <section class="section soft" id="promociones"><div class="wrap">
   <div class="section-head reveal">
     <div class="eyebrow">Promociones</div>
     <h2>Ofertas y promociones <span>de esta temporada.</span></h2>
     <p>Desliza para verlas, toca un flyer para ampliarlo y escríbenos por WhatsApp para aprovecharlas.</p>
   </div>
-  <div class="promo-carousel reveal" data-promos="merch"></div>
+  <div class="promo-carousel reveal" data-promos="merch" data-zone="mer"></div>
 </div></section>
 
 <!-- PRODUCTOS -->
@@ -162,15 +162,16 @@
         <a class="btn btn-primary btn-lg" href="catalogo/index.html"><svg class="ico"><use href="#vc-i-cart"/></svg> Ver catálogo completo</a>
       </div>
     </div>
+    <!-- Cada foto es la del producto data-sku en el sistema (catalogo/api/productos.php); se carga en script.js -->
     <div class="vc-cats">
-      <a class="vc-cat" href="catalogo/index.html?categoria=metal"><span class="vc-cat-img"><img src="catalogo/img/foto-001.webp" alt="" loading="lazy" decoding="async"></span><strong>Termos y mugs</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=tomatodos"><span class="vc-cat-img"><img src="catalogo/img/foto-043.webp" alt="" loading="lazy" decoding="async"></span><strong>Tomatodos</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=lapiceros"><span class="vc-cat-img"><img src="catalogo/img/foto-021.webp" alt="" loading="lazy" decoding="async"></span><strong>Lapiceros</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=libretas"><span class="vc-cat-img"><img src="catalogo/img/foto-120.webp" alt="" loading="lazy" decoding="async"></span><strong>Libretas</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=tecnologia"><span class="vc-cat-img"><img src="catalogo/img/foto-165.webp" alt="" loading="lazy" decoding="async"></span><strong>Tecnología</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=bolsas"><span class="vc-cat-img"><img src="catalogo/img/foto-013.webp" alt="" loading="lazy" decoding="async"></span><strong>Bolsas y mochilas</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=llaveros"><span class="vc-cat-img"><img src="catalogo/img/foto-158.webp" alt="" loading="lazy" decoding="async"></span><strong>Llaveros</strong><small>Ver productos →</small></a>
-      <a class="vc-cat" href="catalogo/index.html?categoria=tazas"><span class="vc-cat-img"><img src="catalogo/img/foto-263.webp" alt="" loading="lazy" decoding="async"></span><strong>Tazas</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=metal"><span class="vc-cat-img"><img data-sku="MTA0001" alt="" decoding="async" hidden></span><strong>Termos y mugs</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tomatodos"><span class="vc-cat-img"><img data-sku="TOP-0005" alt="" decoding="async" hidden></span><strong>Tomatodos</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=lapiceros"><span class="vc-cat-img"><img data-sku="LAP-0003" alt="" decoding="async" hidden></span><strong>Lapiceros</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=libretas"><span class="vc-cat-img"><img data-sku="LIB-0005" alt="" decoding="async" hidden></span><strong>Libretas</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tecnologia"><span class="vc-cat-img"><img data-sku="TCG-0001" alt="" decoding="async" hidden></span><strong>Tecnología</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=bolsas"><span class="vc-cat-img"><img data-sku="BEC-0006" alt="" decoding="async" hidden></span><strong>Bolsas y mochilas</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=llaveros"><span class="vc-cat-img"><img data-sku="KRI-0002" alt="" decoding="async" hidden></span><strong>Llaveros</strong><small>Ver productos →</small></a>
+      <a class="vc-cat" href="catalogo/index.html?categoria=tazas"><span class="vc-cat-img"><img data-sku="C3000-0" alt="" decoding="async" hidden></span><strong>Tazas</strong><small>Ver productos →</small></a>
     </div>
   </div>
 </div></section>
@@ -355,8 +356,8 @@
 <a class="whatsapp-float wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado." aria-label="Escribir a VANYS por WhatsApp" title="Escríbenos por WhatsApp"><span class="pulse"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="#i-wa"/></svg></a>
 <div class="mobile-bar"><a class="btn vc-mobile-cta" href="catalogo/index.html"><svg aria-hidden="true"><use href="#vc-i-cart"/></svg> Catálogo y carrito <b class="vc-count" data-vc-count>0</b></a><a class="btn btn-wa wa-link" href="https://wa.me/51952350797" data-message="Hola VANYS 👋 Quiero cotizar merchandising personalizado con mi logo."><svg class="ico"><use href="#i-wa"/></svg> Cotizar por WhatsApp</a></div>
 
-<script src="promos.js" defer></script>
-<script src="script.js" defer></script>
+<script src="promos.js?v=2" defer></script>
+<script src="script.js?v=2" defer></script>
 <script src="catalogo/integracion-merch.js" defer></script>
 </body>
 </html>

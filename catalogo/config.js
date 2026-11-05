@@ -1,21 +1,18 @@
 /* ==========================================================================
-   VANYS · Catálogo digital · Configuración
-   Único archivo que hay que editar para conectar el carrito con el sistema.
+   VANYS · Catálogo digital · Configuración del carrito
    ========================================================================== */
 window.VANYS_CATALOGO_CONFIG = {
-  // URL del sistema que recibe las solicitudes del carrito (POST con JSON).
-  // Al publicar, cambia localhost:4750 por el dominio del sistema.
+  // Dónde envía el carrito la solicitud (POST con JSON). api/cotizar.php la reenvía al sistema de
+  // cotizaciones con la API key de api/config.php: la key nunca llega al navegador.
   // Vacío = el carrito envía la solicitud por WhatsApp (funciona sin sistema).
-  endpoint: 'http://localhost:4750/api/public/quotation-request',
+  endpoint: 'api/cotizar.php',
 
-  // API key del sistema (Configuración → API keys). Define la empresa/tienda que recibe los pedidos.
-  // Es visible para cualquiera que vea el código de la página: si llegan pedidos falsos,
-  // revócala en el sistema y pon aquí una nueva.
-  headers: { 'X-Api-Key': 'vnk_c31avrOHTPgGMm2Hc8d0HT-z31MhIQ4ao9YsOMeLkKA' },
+  // Cabeceras extra del envío. No pongas aquí la API key: va en api/config.php.
+  headers: {},
 
-  // Tiempo máximo de espera de la respuesta del endpoint, en milisegundos.
-  timeoutMs: 15000,
+  // Tiempo máximo de espera de la respuesta, en milisegundos.
+  timeoutMs: 25000,
 
-  // Si el endpoint falla, ofrecer enviar la misma solicitud por WhatsApp.
+  // Si el envío falla, ofrecer enviar la misma solicitud por WhatsApp.
   whatsappFallback: true,
 };

@@ -1,7 +1,7 @@
 /* ==========================================================================
    VANYS · Catálogo digital (/catalogo)
-   Lee window.VANYS_CATALOGO (data/productos.js) y arma buscador, categorías,
-   filtros, tarjetas, ficha ampliada y cotización por WhatsApp.
+   Lee window.VANYS_CATALOGO (lo arma datos.js con los productos del sistema) y arma
+   buscador, categorías, filtros, tarjetas, ficha ampliada y cotización por WhatsApp.
    Script independiente: no usa ni modifica ../script.js.
    ========================================================================== */
 (function () {
@@ -29,6 +29,8 @@
       ...p.variants.flatMap((v) => [v.code, v.color, v.detail])].filter(Boolean).join(' ')),
   }));
   const byId = new Map(products.map((p) => [p.id, p]));
+  // Ids anteriores (enlaces compartidos y carritos guardados): llevan al mismo producto.
+  products.forEach((p) => (p.aliases || []).forEach((a) => { if (!byId.has(a)) byId.set(a, p); }));
 
   // --- Colores -------------------------------------------------------------
   // Nombre de color del Excel → muestra visual. El orden importa: primero los nombres compuestos.
@@ -39,10 +41,11 @@
     ['transparente', 'repeating-conic-gradient(#e6edf5 0 25%,#fff 0 50%) 50%/8px 8px'],
     ['plateado', 'linear-gradient(135deg,#f4f6f8,#aeb6bf 55%,#eef1f4)'], ['plateada', 'linear-gradient(135deg,#f4f6f8,#aeb6bf 55%,#eef1f4)'],
     ['plata', 'linear-gradient(135deg,#f4f6f8,#aeb6bf 55%,#eef1f4)'], ['dorado', 'linear-gradient(135deg,#f6e27a,#c9a227 60%,#f3d46b)'],
-    ['oro', 'linear-gradient(135deg,#f6e27a,#c9a227 60%,#f3d46b)'], ['bambu', '#d9b77c'], ['madera', '#a9743f'], ['corcho', '#b98a5a'],
+    ['oro rosa', 'linear-gradient(135deg,#f3c9b5,#b7796a 60%,#ecc1ad)'], ['oro', 'linear-gradient(135deg,#f6e27a,#c9a227 60%,#f3d46b)'], ['bambu', '#d9b77c'], ['madera', '#a9743f'], ['corcho', '#b98a5a'],
     ['natural', '#e9dcc0'], ['beige', '#e6d5b8'], ['blanco', '#ffffff'], ['blanca', '#ffffff'], ['negro', '#1d1f24'],
     ['azul', '#1f4fbf'], ['celeste', '#8fd3f4'], ['rojo', '#d63031'], ['rosado', '#f4a6c1'], ['amarillo', '#f7d23e'],
     ['verde', '#2fa65a'], ['morado', '#7b4bb7'], ['naranja', '#ff8a1f'], ['gris', '#9aa3ad'],
+    ['fucsia', '#e0218a'], ['lila', '#b89be0'], ['guinda', '#7a1f2b'],
   ];
   function swatch(color) {
     if (!color) return null;
@@ -53,7 +56,8 @@
       const m = s.match(re);
       if (m) { found.push({ at: m.index, css }); s = s.replace(re, ' '.repeat(name.length)); }
     }
-    if (!found.length) return null;
+    // Color que la web no conoce (creado en el sistema): se usa el hex que trae el producto.
+    if (!found.length) return (data.colorHex && /^#[0-9a-f]{6}$/i.test(data.colorHex[color] || '')) ? data.colorHex[color] : null;
     found.sort((a, b) => a.at - b.at);
     const solid = (c) => (c.startsWith('#') ? c : null);
     if (found.length > 1 && solid(found[0].css) && solid(found[1].css)) return `linear-gradient(135deg,${found[0].css} 50%,${found[1].css} 50%)`;
@@ -64,6 +68,10 @@
     return bg ? `<span class="${cls}" style="background:${esc(bg)}" title="${esc(color)}" aria-hidden="true"></span>` : '';
   };
   const uniqueColors = (p) => [...new Set(p.variants.map((v) => v.color).filter(Boolean))];
+  // Lapiceros BEQ: los colores se leyeron de la foto. Si a uno le faltan, se pide elegirlos viendo la foto.
+  const PHOTO_COLORS = 'Colores disponibles: los que se ven en la foto';
+  const askPhoto = (p) => p.colorsInPhoto && !uniqueColors(p).length;
+  const photoColorsTag = '<span class="cv-photo-colors"><span class="cv-photo-colors-dots" aria-hidden="true"></span>Colores: ver foto</span>';
 
   // --- Estado y URL ----------------------------------------------------------
   const params = new URLSearchParams(location.search);
@@ -121,10 +129,18 @@
       const r = nb.getBoundingClientRect(); const cr = catsEl.getBoundingClientRect();
       catsEl.scrollTo({ left: catsEl.scrollLeft + r.left - cr.left - (cr.width - r.width) / 2, behavior: 'smooth' });
     }
-    // Si el usuario estaba más abajo, vuelve al inicio de los resultados.
-    const top = $('.cv-layout').getBoundingClientRect().top + window.scrollY - 70;
-    if (window.scrollY > top) window.scrollTo({ top, behavior: 'smooth' });
+    toResults(); // si el usuario estaba más abajo, vuelve al inicio de los resultados
   });
+
+  // Lleva la página al inicio de los resultados, justo debajo de la cabecera (y del buscador compacto,
+  // que en celular va como una fila debajo de ella). Sin "always", solo si el usuario está más abajo.
+  const smooth = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
+  function toResults(always) {
+    const mini = $('#cv-search-mini');
+    const bottom = Math.max($('.cv-header').getBoundingClientRect().bottom, mini.offsetParent ? mini.getBoundingClientRect().bottom : 0);
+    const top = $('.cv-layout').getBoundingClientRect().top + window.scrollY - bottom - 2;
+    if (always || window.scrollY > top) window.scrollTo({ top, behavior: smooth });
+  }
 
   // --- Render: tarjetas ------------------------------------------------------
   function priceBlock(p) {
@@ -133,7 +149,7 @@
     return `<div class="cv-prices"><p class="cv-prices-head">Precio por unidad${p.priceVaries ? ' · desde' : ''}</p>${cell('<span class="cv-xs-hide">Pedido </span>100 u.', p.p100)}${cell('<span class="cv-xs-hide">Pedido </span>1,000 u.', p.p1000)}</div>`;
   }
   function codesLine(p) {
-    const codes = p.variants.map((v) => v.code).filter(Boolean);
+    const codes = [...new Set(p.variants.map((v) => v.code).filter(Boolean))];
     const parts = [];
     if (p.sku) parts.push(`SKU <b>${esc(p.sku)}</b>`);
     if (codes.length === 1) parts.push(`Cód. <b>${esc(codes[0])}</b>`);
@@ -145,7 +161,8 @@
     const dots = colors.map((c) => dot(c)).filter(Boolean);
     const shownDots = dots.slice(0, 7).join('');
     const extra = colors.length > 7 ? `<span class="cv-more-colors">+${colors.length - 7}</span>` : '';
-    const colorTxt = colors.length ? `${colors.length} ${colors.length === 1 ? 'color' : 'colores'}: ${colors.join(', ')}` : '';
+    const colorTxt = askPhoto(p) ? PHOTO_COLORS
+      : colors.length ? `${colors.length} ${colors.length === 1 ? 'color' : 'colores'}: ${colors.join(', ')}` : '';
     const img = p.images[0]
       ? `<img src="${esc(p.images[0])}" alt="${esc(p.name)}" loading="lazy" decoding="async">`
       : '<span class="cv-noimg">Imagen no disponible</span>';
@@ -156,7 +173,7 @@
         <span class="cv-card-cat">${esc(catLabel[p.category])}</span>
         <h3 class="cv-card-title"><button type="button" data-open="${p.id}">${esc(p.name)}</button></h3>
         <p class="cv-codes">${codesLine(p)}</p>
-        <div class="cv-swatches" ${colorTxt ? `title="${esc(colorTxt)}"` : ''}>${shownDots}${extra}<span class="cv-sr">${esc(colorTxt)}</span></div>
+        <div class="cv-swatches" ${colorTxt ? `title="${esc(colorTxt)}"` : ''}>${askPhoto(p) ? photoColorsTag : shownDots + extra}<span class="cv-sr">${esc(colorTxt)}</span></div>
         ${priceBlock(p)}
         <div class="cv-card-actions">
           <button type="button" class="cv-btn cv-btn-ghost" data-open="${p.id}">Ver ficha</button>
@@ -198,25 +215,55 @@
   function update() { renderCats(); renderGrid(); syncUrl(); }
 
   // --- Buscador, filtros y orden --------------------------------------------
-  const q = $('#cv-q');
-  const qClear = $('#cv-q-clear');
+  // Dos buscadores con el mismo texto: el del hero (#cv-q) y el compacto de la cabecera (#cv-q2), que
+  // aparece cuando el del hero sale de la pantalla para que el buscador siga al usuario mientras baja.
+  const qInputs = [$('#cv-q'), $('#cv-q2')];
+  const qClears = [$('#cv-q-clear'), $('#cv-q2-clear')];
   const sortEl = $('#cv-sort');
-  q.value = state.q; sortEl.value = state.sort;
-  qClear.hidden = !state.q;
+  const setQ = (v) => {
+    qInputs.forEach((input) => { if (input.value !== v) input.value = v; });
+    qClears.forEach((btn) => { btn.hidden = !v; });
+  };
+  setQ(state.q); sortEl.value = state.sort;
   let t;
-  q.addEventListener('input', () => {
-    qClear.hidden = !q.value;
-    clearTimeout(t);
-    t = setTimeout(() => { state.q = q.value.trim(); state.shown = PAGE_SIZE; update(); }, 140);
+  qInputs.forEach((input, i) => {
+    input.addEventListener('input', () => {
+      setQ(input.value);
+      clearTimeout(t);
+      t = setTimeout(() => {
+        state.q = input.value.trim(); state.shown = PAGE_SIZE; update();
+        if (i === 1) toResults(); // desde la cabecera: muestra el inicio de los resultados nuevos
+      }, 140);
+    });
+    input.form.addEventListener('submit', (e) => { e.preventDefault(); input.blur(); toResults(true); });
+    qClears[i].addEventListener('click', () => { setQ(''); state.q = ''; state.shown = PAGE_SIZE; update(); input.focus(); });
   });
-  $('#cv-search-form').addEventListener('submit', (e) => { e.preventDefault(); q.blur(); $('.cv-layout').scrollIntoView({ behavior: 'smooth' }); });
-  qClear.addEventListener('click', () => { q.value = ''; qClear.hidden = true; state.q = ''; update(); q.focus(); });
   sortEl.addEventListener('change', () => { state.sort = sortEl.value; update(); });
   $('#cv-reset').addEventListener('click', () => {
     Object.assign(state, { q: '', cat: 'all', sort: 'relevance', shown: PAGE_SIZE });
-    q.value = ''; qClear.hidden = true; sortEl.value = 'relevance';
+    setQ(''); sortEl.value = 'relevance';
     update();
   });
+
+  // Buscador compacto visible (body.cv-stuck) cuando el del hero quedó arriba de la pantalla. Mientras
+  // se escribe en él no se esconde, aunque el del hero vuelva a verse (en celular cerraría el teclado).
+  let heroAbove = false;
+  const applyStuck = () => document.body.classList.toggle('cv-stuck', heroAbove || document.activeElement === qInputs[1]);
+  if ('IntersectionObserver' in window) {
+    new IntersectionObserver(([e]) => {
+      heroAbove = !e.isIntersecting && e.boundingClientRect.top < window.innerHeight / 2;
+      applyStuck();
+    }, { rootMargin: '-68px 0px 0px 0px' }).observe($('#cv-search-form'));
+    qInputs[1].addEventListener('blur', () => setTimeout(applyStuck, 200)); // deja terminar un clic en su botón ✕
+  }
+
+  // Botón "Volver arriba": aparece después de bajar una pantalla.
+  const toTop = $('#cv-totop');
+  let ticking = false;
+  const onScroll = () => { ticking = false; toTop.classList.toggle('cv-on', window.scrollY > window.innerHeight); };
+  window.addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+  onScroll();
+  toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: smooth }));
 
   // Resumen del hero
   const totalVariants = products.reduce((n, p) => n + p.variants.length, 0);
@@ -232,9 +279,10 @@
     if (v) {
       if (v.code) lines.push(`• Código: ${v.code}`);
       if (v.color) lines.push(`• Color: ${v.color}`);
+      else if (p.colorsInPhoto) lines.push('• Color (de los que se ven en la foto): ');
       if (v.detail) lines.push(`• Detalle: ${v.detail}`);
     } else {
-      const codes = p.variants.map((x) => x.code).filter(Boolean);
+      const codes = [...new Set(p.variants.map((x) => x.code).filter(Boolean))];
       if (codes.length) lines.push(`• ${codes.length > 1 ? 'Códigos' : 'Código'}: ${codes.join(', ')}`);
     }
     if (qty) {
@@ -269,7 +317,7 @@
     const hasDetail = p.variants.some((v) => v.detail);
     const hasPrice = p.variants.some((v) => v.p100 != null || v.p1000 != null);
     const head = `<tr><th>Código</th><th>Color</th>${hasDetail ? '<th>Detalle</th>' : ''}${hasPrice ? '<th class="cv-num">x 100 u.</th><th class="cv-num">x 1,000 u.</th>' : ''}</tr>`;
-    const rows = p.variants.map((v) => `<tr><td>${esc(v.code || '—')}</td><td>${dot(v.color)}${esc(v.color || '—')}</td>${hasDetail ? `<td>${esc(v.detail || '—')}</td>` : ''}${hasPrice ? `<td class="cv-num">${v.p100 != null ? money(v.p100) : 'Consultar'}</td><td class="cv-num">${v.p1000 != null ? money(v.p1000) : 'Consultar'}</td>` : ''}</tr>`).join('');
+    const rows = p.variants.map((v) => `<tr><td>${esc(v.code || '—')}</td><td>${dot(v.color)}${esc(v.color || (p.colorsInPhoto ? 'Los de la foto' : '—'))}</td>${hasDetail ? `<td>${esc(v.detail || '—')}</td>` : ''}${hasPrice ? `<td class="cv-num">${v.p100 != null ? money(v.p100) : 'Consultar'}</td><td class="cv-num">${v.p1000 != null ? money(v.p1000) : 'Consultar'}</td>` : ''}</tr>`).join('');
     return `<details class="cv-details" ${p.variants.length <= 6 ? 'open' : ''}><summary>Códigos y colores disponibles (${p.variants.length})</summary><div class="cv-table-wrap"><table class="cv-table"><thead>${head}</thead><tbody>${rows}</tbody></table></div></details>`;
   }
   function priceBox(v) {
@@ -297,6 +345,7 @@
         <p class="cv-pricenote">${v.p100 != null || v.p1000 != null ? 'Precios de referencia por unidad según la cantidad del pedido. El precio final se confirma en tu cotización.' : 'Este producto se cotiza a pedido.'}</p>
         ${many ? `<p class="cv-block-title">Elige color o variante</p>
         <div class="cv-variants" role="radiogroup" aria-label="Color o variante">${p.variants.map((x, i) => `<button type="button" class="cv-variant${swatch(x.color) ? '' : ' cv-variant-noc'}" role="radio" aria-checked="${i === vi}" data-v="${i}">${dot(x.color)}${esc(variantLabel(x, i))}</button>`).join('')}</div>` : ''}
+        ${p.colorsInPhoto ? `<div class="cv-photo-note" role="note"><span class="cv-photo-colors-dots" aria-hidden="true"></span><p>${askPhoto(p) ? `<b>${PHOTO_COLORS}.</b> Indícanos cuál o cuáles quieres al cotizar y te confirmamos la disponibilidad.` : '<b>Colores según la foto:</b> el tono real puede variar un poco. Te confirmamos la disponibilidad de cada color al cotizar.'}</p></div>` : ''}
         <p class="cv-selected">${v.color ? `Color: <b>${esc(v.color)}</b>` : ''}${v.color && v.code ? ' · ' : ''}${v.code ? `Código: <b>${esc(v.code)}</b>` : ''}${v.detail ? ` · ${esc(v.detail)}` : ''}</p>
         ${specsList(p)}
         ${variantsTable(p)}

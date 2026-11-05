@@ -1,0 +1,13 @@
+# Desde el navegador solo se usan productos.php, anuncios.php y cotizar.php (y la copia cache/productos.json).
+# config.php (API key), comun.php, los bloqueos y los límites por conexión no se listan ni se abren.
+Options -Indexes
+
+<FilesMatch "(^(config|config\.ejemplo|comun)\.php|\.lock|\.limite|\.tmp)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>

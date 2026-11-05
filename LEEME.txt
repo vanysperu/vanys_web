@@ -8,7 +8,7 @@ ESTRUCTURA
 - publicidad.html y sistemas.html ... Redirigen a las páginas nuevas para conservar enlaces antiguos.
 - styles.css ........... Estilos compartidos por las tres páginas (antes estaban repetidos dentro de cada HTML).
 - promos.js ............ Flyers del carrusel de promociones (ruta, texto y mensaje de WhatsApp). Se editan solo aquí y aparecen en merchandising.html y sistemas-web.html.
-- catalogo/ ............ Catálogo digital con buscador, fichas y carrito de cotización (ver catalogo-generador/LEEME.txt).
+- catalogo/ ............ Catálogo digital con buscador, fichas y carrito de cotización. Los productos y anuncios salen del sistema por catalogo/api/ (configuración en catalogo/api/config.ejemplo.php).
                          merchandising.html usa catalogo/integracion-merch.css y .js para su sección y su botón flotante.
 - script.js ............ Menú, enlaces de WhatsApp, carrusel de promociones, visor de catálogos (ya sin uso), cotizador, preguntas frecuentes, animaciones y grulla guía.
 - assets/ .............. Imágenes que carga la web, por carpeta:

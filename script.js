@@ -57,10 +57,14 @@
     else window.open(src, '_blank', 'noopener');
   };
 
-  // --- Carrusel de promociones (flyers definidos en promos.js) ---------------
+  // --- Carrusel de promociones -----------------------------------------------
+  // Los flyers salen del sistema (Ventas → Anuncios), por la zona de data-zone (mer, tec), a través de
+  // catalogo/api/anuncios.php, que guarda la API key en el servidor. Si el sistema no responde (o la página
+  // se abre sin PHP), se usan los flyers de promos.js. Si la zona no tiene anuncios prendidos, la sección se oculta.
   // Ocupa todo el ancho; muestra hasta 2 flyers completos a la vez (1 en celular),
   // avanza solo cada 5 s cuando hay más flyers de los que caben y nunca corta una imagen.
-  // La línea (merch/web) se deduce de la carpeta del flyer: assets/promociones/merch o assets/promociones/web.
+  // En promos.js la línea (merch/web) se deduce de la carpeta del flyer: assets/promociones/merch o assets/promociones/web.
+  const ADS_ENDPOINT = 'catalogo/api/anuncios.php';
   const promoLine = (promo) => {
     if (promo.line) return promo.line;
     if (/\/promociones\/web\//i.test(promo.image || '')) return 'web';
@@ -68,29 +72,50 @@
     return 'all';
   };
   const promos = (Array.isArray(window.VANYS_PROMOS) ? window.VANYS_PROMOS : []).map((promo) => ({ ...promo, line: promoLine(promo) }));
-  $$('[data-promos]').forEach((carousel) => {
+  // Anuncios de la zona, ya ordenados; null si no se pudieron leer.
+  const loadAds = async (zone) => {
+    try {
+      const res = await fetch(`${ADS_ENDPOINT}?zona=${encodeURIComponent(zone)}`, { headers: { Accept: 'application/json' }, signal: AbortSignal.timeout ? AbortSignal.timeout(9000) : undefined });
+      if (!res.ok) return null;
+      const json = await res.json(); // sin PHP llega el código como texto: aquí falla y se usa promos.js
+      return json && json.success && Array.isArray(json.ads) ? json.ads : null;
+    } catch (error) {
+      return null;
+    }
+  };
+  const isExternal = (url) => { try { return new URL(url, window.location.href).origin !== window.location.origin; } catch (error) { return true; } };
+
+  $$('[data-promos]').forEach(async (carousel) => {
     const filter = carousel.dataset.promos || 'all';
-    const list = promos.filter((promo) => filter === 'all' || promo.line === 'all' || promo.line === filter);
+    const ads = carousel.dataset.zone ? await loadAds(carousel.dataset.zone) : null;
+    const list = ads
+      ? ads.map((ad) => ({ image: ad.image_url, alt: ad.title, link: ad.link_url, line: filter }))
+      : promos.filter((promo) => filter === 'all' || promo.line === 'all' || promo.line === filter);
     const section = carousel.closest('section');
     if (!list.length) {
       if (section) section.hidden = true;
       return;
     }
+    const hasLinks = list.some((promo) => promo.link);
     carousel.classList.add('promo-carousel');
     carousel.classList.toggle('single', list.length === 1);
     carousel.innerHTML = `
       <div class="promo-viewport">
         <button type="button" class="promo-nav prev" aria-label="Promoción anterior">‹</button>
         <div class="promo-track" tabindex="0" aria-label="Ofertas y promociones">
-          ${list.map((promo, index) => `<figure class="promo-slide" data-index="${index}" data-message="${escapeHtml(promo.message || `Hola VANYS 👋 Vi la promoción "${promo.alt || ''}" y quiero más información.`)}">
-            ${promo.image ? `<img class="promo-bg" src="${escapeHtml(promo.image)}" alt="" aria-hidden="true" decoding="async"><img class="promo-img" src="${escapeHtml(promo.image)}" alt="${escapeHtml(promo.alt || 'Promoción VANYS')}" decoding="async">` : ''}
-            <span class="promo-zoom" aria-hidden="true">🔍 Ampliar</span>
-          </figure>`).join('')}
+          ${list.map((promo, index) => {
+            const images = promo.image ? `<img class="promo-bg" src="${escapeHtml(promo.image)}" alt="" aria-hidden="true" decoding="async"><img class="promo-img" src="${escapeHtml(promo.image)}" alt="${escapeHtml(promo.alt || 'Promoción VANYS')}" decoding="async">` : '';
+            const target = promo.link && isExternal(promo.link) ? ' target="_blank" rel="noopener"' : '';
+            return `<figure class="promo-slide${promo.link ? ' has-link' : ''}" data-index="${index}" data-message="${escapeHtml(promo.message || `Hola VANYS 👋 Vi la promoción "${promo.alt || ''}" y quiero más información.`)}">
+            ${promo.link ? `<a class="promo-link" href="${escapeHtml(promo.link)}"${target}>${images}</a>` : images}
+            <span class="promo-zoom" aria-hidden="true">${promo.link ? 'Ver promoción ↗' : '🔍 Ampliar'}</span>
+          </figure>`;
+          }).join('')}
         </div>
         <button type="button" class="promo-nav next" aria-label="Promoción siguiente">›</button>
       </div>
       <div class="promo-dots" role="tablist" aria-label="Ir a una promoción"></div>
-      <div class="promo-cta"><a class="btn btn-wa wa-link" href="https://wa.me/${WHATSAPP_NUMBER}"><svg class="ico"><use href="#i-wa"/></svg> Quiero esta promoción</a><small>Toca un flyer para ampliarlo<span class="promo-hint"> · Desliza para ver más</span></small></div>`;
+      <div class="promo-cta"><a class="btn btn-wa wa-link" href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" rel="noopener noreferrer"><svg class="ico"><use href="#i-wa"/></svg> Quiero esta promoción</a><small>${hasLinks ? 'Toca un flyer para ver más' : 'Toca un flyer para ampliarlo'}<span class="promo-hint"> · Desliza para ver más</span></small></div>`;
 
     const track = $('.promo-track', carousel);
     const slides = $$('.promo-slide', track);
@@ -153,7 +178,8 @@
       if (image.complete) { if (image.naturalWidth) ready(); else missing(); }
       image.addEventListener('load', ready);
       image.addEventListener('error', missing);
-      slide.addEventListener('click', () => { if (slide.classList.contains('has-image')) openLightbox(image.currentSrc || image.src, image.alt); });
+      // Con enlace, el clic lo abre el propio <a>; sin enlace, se amplía el flyer.
+      slide.addEventListener('click', () => { if (!promo.link && slide.classList.contains('has-image')) openLightbox(image.currentSrc || image.src, image.alt); });
     });
 
     let ticking = false;
@@ -186,6 +212,36 @@
     layout();
     start();
   });
+
+  // --- Fotos de las categorías del catálogo (merchandising.html) -------------
+  // Cada <img data-sku> muestra la foto que tiene ese producto en el sistema. Se piden al acercarse a la
+  // sección, a catalogo/api/productos.php (la misma copia que usa el catálogo). Sin foto, queda el recuadro.
+  const skuImages = $$('img[data-sku]');
+  if (skuImages.length) {
+    const loadSkuImages = async () => {
+      try {
+        const res = await fetch('catalogo/api/productos.php', { headers: { Accept: 'application/json' } });
+        const json = res.ok ? await res.json() : null;
+        const bySku = new Map((json && Array.isArray(json.products) ? json.products : []).map((p) => [String(p.sku).toUpperCase(), p.image_url]));
+        skuImages.forEach((img) => {
+          const src = bySku.get(img.dataset.sku.toUpperCase());
+          if (!src) return;
+          img.addEventListener('load', () => { img.hidden = false; }, { once: true });
+          img.src = src;
+        });
+      } catch (error) { /* sin PHP o sin sistema: quedan los recuadros sin foto */ }
+    };
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        loadSkuImages();
+      }, { rootMargin: '600px 0px' });
+      skuImages.forEach((img) => observer.observe(img.closest('a') || img));
+    } else {
+      loadSkuImages();
+    }
+  }
 
   // --- Enlaces de WhatsApp ---------------------------------------------------
   // Cada enlace .wa-link abre WhatsApp con el mensaje de su atributo data-message.

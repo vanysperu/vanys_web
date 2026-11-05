@@ -1,5 +1,5 @@
 # Excel fuente: tiene costos, utilidades y stock. Nunca subirlo (el repositorio es público).
 *.xlsx
-# Herramienta local del catálogo
-catalogo-generador/node_modules/
-catalogo-generador/reporte.json
+# Catálogo: config del proxy PHP (API key) y copia del catálogo que genera
+catalogo/api/config.php
+catalogo/api/cache/

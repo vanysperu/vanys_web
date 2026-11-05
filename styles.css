@@ -203,6 +203,15 @@ header.site-header {
 .choice-card p { font-size: .96rem; max-width: 390px; margin: 0 auto 20px; }
 .choice-card .btn { align-self: center; width: min(100%, 300px); color: #fff; padding: 13px 18px; }
 .choice-card .btn:hover { color: #fff; }
+/* Toda la tarjeta lleva al enlace de su botón: el área del clic del botón se estira sobre la tarjeta.
+   El botón no se mueve al pasar el cursor (un transform encogería esa área al tamaño del botón). */
+.choice-card { cursor: pointer; }
+.choice-card .btn { position: static; } /* el área se mide desde la tarjeta, no desde el botón */
+.choice-card .btn:after { content: ""; position: absolute; inset: 0; z-index: 2; }
+.choice-card .btn:hover { transform: none; }
+.choice-card:hover .btn { box-shadow: 0 12px 26px #ff790e4d; }
+.choice-card .btn:focus-visible { outline: none; }
+.choice-card:has(.btn:focus-visible) { outline: 3px solid var(--orange); outline-offset: 3px; }
 
 /* --- Productos destacados ------------------------------------------------- */
 .product-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
@@ -274,6 +283,9 @@ header.site-header {
 .promo-carousel.single .promo-track { justify-content: center; }
 .promo-slide { flex: 0 0 calc((100% - var(--promo-gap) * (var(--promo-cols) - 1)) / var(--promo-cols)); scroll-snap-align: start; margin: 0; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; position: relative; background: #061a38; box-shadow: var(--shadow-sm); }
 .promo-slide.has-image { cursor: zoom-in; }
+.promo-slide.has-link { cursor: pointer; }
+.promo-link { display: block; height: 100%; border-radius: inherit; }
+.promo-link:focus-visible { outline: 3px solid var(--orange); outline-offset: -3px; }
 .promo-bg { position: absolute; inset: -10%; width: 120%; height: 120%; object-fit: cover; filter: blur(26px) saturate(1.1); opacity: .8; }
 .promo-img { position: relative; display: block; width: 100%; height: 100%; object-fit: contain; }
 .promo-placeholder { position: absolute; inset: 0; padding: 24px; color: #fff; display: flex; flex-direction: column; overflow: hidden; background: linear-gradient(160deg, #08234a, #0a3c78); }

@@ -1,7 +1,7 @@
 /* ==========================================================================
    VANYS · Catálogo digital · Carrito de cotización
    El cliente junta productos (color + cantidad), deja sus datos y la solicitud
-   se envía directo al sistema de cotizaciones (endpoint y API key en config.js).
+   se envía al sistema de cotizaciones a través de api/cotizar.php (la API key queda en el servidor).
    Sin endpoint, o si falla, se envía por WhatsApp.
    No hay pagos: es una solicitud de cotización.
    Depende de window.VanysCatalogo (catalogo.js) y window.VANYS_CATALOGO_CONFIG.
@@ -16,7 +16,7 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const STORAGE_KEY = 'vanys-catalogo-carrito-v1';
   const MAX_QTY = 1000000;
-  const MAX_ITEMS = 50;   // límite del sistema por solicitud (SKU distintos)
+  const MAX_ITEMS = 50;   // límite del sistema por solicitud (líneas distintas)
 
   // --- Estado ----------------------------------------------------------------
   // Solo se guarda { id, code, color, vi, qty }: precios y nombres se leen siempre del catálogo vigente.
@@ -119,6 +119,7 @@
         <strong>${esc(p.name)}</strong>
         <span class="cv-li-meta">${esc(meta)}</span>
         ${v.color || v.detail ? `<span class="cv-li-meta">${dot(v.color)}${esc([v.color, v.detail].filter(Boolean).join(' · '))}</span>` : ''}
+        ${!v.color && p.colorsInPhoto ? '<span class="cv-li-meta"><span class="cv-photo-colors-dots" aria-hidden="true"></span>Color: a indicar (los de la foto)</span>' : ''}
         <div class="cv-li-row">
           <label class="cv-li-qty"><span class="cv-sr">Cantidad de ${esc(p.name)}</span><input type="number" min="1" max="${MAX_QTY}" step="1" inputmode="numeric" value="${it.qty}" data-qty> <span aria-hidden="true">u.</span></label>
           <button type="button" class="cv-iconbtn cv-li-del" data-del aria-label="Quitar ${esc(p.name)} del carrito"><svg class="cv-ico"><use href="#cv-i-trash"/></svg></button>
@@ -275,30 +276,36 @@
         empresa: clean(form.empresa), ruc: clean(form.ruc), comentarios: clean(form.comentarios),
       },
       items: t.lines.map((l) => ({
-        productoId: l.p.id, sku: l.p.sku, codigo: l.v.code, nombre: l.p.name,
-        categoria: catLabel[l.p.category], color: l.v.color, detalle: l.v.detail,
+        productoId: l.p.id, sku: l.p.sku, codigo: l.v.code, codigoIndicaColor: !!l.v.codeColor, colorElegido: l.v.color || null, nombre: l.p.name,
+        categoria: catLabel[l.p.category], color: l.v.color || (l.p.colorsInPhoto ? 'color a indicar (de la foto)' : null), detalle: l.v.detail,
         cantidad: l.it.qty,
         precioUnitarioReferencial: l.unit, tarifa: l.tier, subtotalReferencial: l.subtotal,
       })),
       totales: { productos: t.lines.length, unidades: t.units, totalReferencial: t.total, productosACotizar: t.unpriced, moneda: 'PEN' },
     };
   }
-  // Cuerpo que recibe el sistema (POST /api/public/quotation-request).
-  // Cada color va con su código (A1100-02); si no tiene código, con el SKU del producto.
-  // Los SKU repetidos se suman. Documentado en catalogo-generador/LEEME.txt.
+  // Cuerpo que recibe el sistema (POST /api/public/quotation-request, a través de api/cotizar.php).
+  // Cada línea lleva el SKU del producto y, si tiene, su código de proveedor:
+  //   código de un color (E6000-01) → sku + code · un código para varios colores (MT013) → sku + code + color
+  //   sin código → sku + color, o solo sku.
+  // El SKU hace que el producto entre también en sistemas anteriores a la 1.5.2 (que no leen code ni color).
+  // Las líneas iguales (mismo SKU, código y color) se suman.
   function apiPayload(payload) {
     const c = payload.cliente;
     const client = { phone: phoneDigits(c.telefono), name: cleanName(c.nombre) };
     if (c.email) client.email = c.email;
     if (c.ruc) { client.document_type = 6; client.document_number = c.ruc; }
-    const bySku = new Map();
+    const lines = new Map();
     payload.items.forEach((it) => {
-      const sku = it.codigo || it.sku;
-      const k = sku.toUpperCase();
-      if (bySku.has(k)) bySku.get(k).quantity = Math.min(MAX_QTY, bySku.get(k).quantity + it.cantidad);
-      else bySku.set(k, { sku, quantity: it.cantidad });
+      const line = { sku: it.sku };
+      if (it.codigo) line.code = it.codigo;
+      if (it.colorElegido && !(it.codigo && it.codigoIndicaColor)) line.color = it.colorElegido;
+      line.quantity = it.cantidad;
+      const k = [line.sku, line.code, line.color].map((x) => String(x || '').toUpperCase()).join('|');
+      if (lines.has(k)) lines.get(k).quantity = Math.min(MAX_QTY, lines.get(k).quantity + it.cantidad);
+      else lines.set(k, line);
     });
-    return { client, items: [...bySku.values()] };
+    return { client, items: [...lines.values()] };
   }
   function whatsappText(payload) {
     const c = payload.cliente;

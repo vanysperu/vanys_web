@@ -1,4 +1,9 @@
-// VANYS · Carrusel de ofertas y promociones.
+// VANYS · Carrusel de ofertas y promociones · RESPALDO.
+//
+// Los flyers se administran en el sistema (Ventas → Anuncios): zona "mer" para merchandising.html y
+// zona "tec" para sistemas-web.html (data-zone en cada página; catalogo/api/anuncios.php los lee).
+// Esta lista solo se usa si el sistema no responde o si la página se abre sin PHP (en tu PC).
+// Si una zona responde sin anuncios prendidos, la sección de promociones se oculta (no se usa esta lista).
 //
 // CARPETAS:
 //   assets/promociones/merch  -> flyers de merchandising (se muestran en merchandising.html)
