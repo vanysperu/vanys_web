@@ -61,8 +61,8 @@
   // Los flyers salen del sistema (Ventas → Anuncios), por la zona de data-zone (mer, tec), a través de
   // catalogo/api/anuncios.php, que guarda la API key en el servidor. Si el sistema no responde (o la página
   // se abre sin PHP), se usan los flyers de promos.js. Si la zona no tiene anuncios prendidos, la sección se oculta.
-  // Ocupa todo el ancho; muestra hasta 2 flyers completos a la vez (1 en celular),
-  // avanza solo cada 5 s cuando hay más flyers de los que caben y nunca corta una imagen.
+  // Ocupa todo el ancho; muestra hasta 2 flyers completos a la vez (1 en celular), nunca corta una imagen
+  // y avanza solo cada 5 s. Con 2 flyers muestra uno a la vez (clase "duo"), para que también se mueva.
   // En promos.js la línea (merch/web) se deduce de la carpeta del flyer: assets/promociones/merch o assets/promociones/web.
   const ADS_ENDPOINT = 'catalogo/api/anuncios.php';
   const promoLine = (promo) => {
@@ -99,6 +99,7 @@
     const hasLinks = list.some((promo) => promo.link);
     carousel.classList.add('promo-carousel');
     carousel.classList.toggle('single', list.length === 1);
+    carousel.classList.toggle('duo', list.length === 2);
     carousel.innerHTML = `
       <div class="promo-viewport">
         <button type="button" class="promo-nav prev" aria-label="Promoción anterior">‹</button>
@@ -200,15 +201,19 @@
       if (event.key === 'ArrowLeft') { event.preventDefault(); goTo(active - 1); }
     });
 
-    // Avance automático cada 5 s; se detiene al pasar el cursor, tocar o enfocar el carrusel.
-    const stop = () => window.clearInterval(timer);
+    // Avance automático cada 5 s, también con el cursor encima: el carrusel ocupa todo el ancho y, si se
+    // detuviera con el cursor, casi nunca se movería. Espera mientras se toca, se navega con el teclado o
+    // hay un flyer ampliado. Tras usar las flechas o los puntos cuenta 5 s completos antes de avanzar.
+    let touching = false;
+    const paused = () => slides.length <= perView || document.hidden || touching
+      || Boolean(document.querySelector('dialog[open]') || carousel.querySelector(':focus-visible'));
     const start = () => {
-      stop();
-      if (reduceMotion || slides.length <= perView) return;
-      timer = window.setInterval(() => { if (!document.hidden) goTo(active + 1); }, 5000);
+      window.clearInterval(timer);
+      if (!reduceMotion) timer = window.setInterval(() => { if (!paused()) goTo(active + 1); }, 5000);
     };
-    ['pointerenter', 'focusin', 'touchstart'].forEach((type) => carousel.addEventListener(type, stop, { passive: true }));
-    ['pointerleave', 'focusout', 'touchend'].forEach((type) => carousel.addEventListener(type, start, { passive: true }));
+    carousel.addEventListener('touchstart', () => { touching = true; }, { passive: true });
+    ['touchend', 'touchcancel'].forEach((type) => carousel.addEventListener(type, () => { touching = false; start(); }, { passive: true }));
+    carousel.addEventListener('click', start);
     layout();
     start();
   });

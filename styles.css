@@ -281,6 +281,11 @@ header.site-header {
 .promo-track::-webkit-scrollbar { display: none; }
 .promo-track:focus-visible { box-shadow: 0 0 0 3px #1769d233; }
 .promo-carousel.single .promo-track { justify-content: center; }
+/* Con 2 flyers: uno a la vez y del mismo ancho que un flyer normal; así el carrusel también se mueve. */
+@media (min-width: 781px) {
+  .promo-carousel.duo { --promo-cols: 1; }
+  .promo-carousel.duo .promo-viewport { width: calc((100% - var(--promo-gap)) / 2); margin-inline: auto; }
+}
 .promo-slide { flex: 0 0 calc((100% - var(--promo-gap) * (var(--promo-cols) - 1)) / var(--promo-cols)); scroll-snap-align: start; margin: 0; aspect-ratio: 4 / 3; border-radius: 20px; overflow: hidden; position: relative; background: #061a38; box-shadow: var(--shadow-sm); }
 .promo-slide.has-image { cursor: zoom-in; }
 .promo-slide.has-link { cursor: pointer; }
